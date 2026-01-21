@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D 贪食蛇</title>
+    <title>贪食蛇</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <div id="gameContainer"></div>
-    <div id="hud">
-        <div id="score">分数: 0</div>
+    <div id="gameWrapper">
+        <div id="topBar">
+            <div id="score">分数: 0</div>
+            <div id="highScore">最高: 0</div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
         <div id="gameStatus">按空格开始游戏</div>
-        <div id="controls">
+        
+        <div id="controls" class="mobile-controls">
+            <button class="control-btn" data-direction="up">↑</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="control-btn" data-direction="left">←</button>
+                <button class="control-btn" data-direction="down">↓</button>
+                <button class="control-btn" data-direction="right">→</button>
+            </div>
         </div>
     </div>
     
