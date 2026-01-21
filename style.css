@@ -86,11 +86,17 @@ body {
 .mobile-controls {
     position: absolute;
     bottom: 30px;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
     z-index: 15;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
 }
 
 .control-btn {

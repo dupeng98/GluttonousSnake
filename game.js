@@ -33,7 +33,7 @@ class SnakeGame {
         
         // 游戏速度
         this.moveCounter = 0;
-        this.moveDelay = 6;
+        this.moveDelay = 12;
         
         // 事件监听
         this.setupControls();
@@ -247,8 +247,8 @@ class SnakeGame {
             this.updateScore();
             
             // 增加速度
-            if (this.moveDelay > 3) {
-                this.moveDelay -= 0.5;
+            if (this.moveDelay > 6) {
+                this.moveDelay -= 0.3;
             }
             
             // 生成新食物
@@ -294,7 +294,7 @@ class SnakeGame {
         this.direction = { x: 1, y: 0 };
         this.nextDirection = { x: 1, y: 0 };
         this.food = this.generateFood();
-        this.moveDelay = 6;
+        this.moveDelay = 12;
         this.updateScore();
     }
     
@@ -377,77 +377,96 @@ class SnakeGame {
         this.snake.forEach((segment, index) => {
             const x = segment.x * this.tileWidth;
             const y = segment.y * this.tileHeight;
-            const padding = this.tileWidth * 0.1;
+            const centerX = x + this.tileWidth / 2;
+            const centerY = y + this.tileHeight / 2;
             
             if (index === 0) {
-                // 蛇头 - 明亮的绿色，带发光
+                // 蛇头 - 圆形，带发光效果
                 this.ctx.shadowColor = '#00ff00';
-                this.ctx.shadowBlur = 20;
+                this.ctx.shadowBlur = 25;
                 this.ctx.shadowOffsetX = 0;
                 this.ctx.shadowOffsetY = 0;
                 
+                // 外层发光
                 this.ctx.fillStyle = '#00ff00';
                 this.ctx.beginPath();
-                this.ctx.roundRect(
-                    x + padding, y + padding,
-                    this.tileWidth - padding * 2, this.tileHeight - padding * 2,
-                    5
-                );
+                this.ctx.arc(centerX, centerY, this.tileWidth * 0.45, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // 蛇的眼睛
+                // 内层高亮
+                this.ctx.fillStyle = '#66ff66';
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, this.tileWidth * 0.35, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // 蛇的眼睛 - 更精致的设计
+                const eyeSize = this.tileWidth * 0.12;
+                const eyeOffset = this.tileWidth * 0.2;
+                
                 this.ctx.fillStyle = '#000000';
-                const eyeSize = this.tileWidth * 0.15;
                 if (this.direction.x === 1) {
                     // 右
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth - eyeSize * 1.5, y + this.tileHeight * 0.35, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX + eyeOffset, centerY - eyeOffset * 0.5, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth - eyeSize * 1.5, y + this.tileHeight * 0.65, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX + eyeOffset, centerY + eyeOffset * 0.5, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                 } else if (this.direction.x === -1) {
                     // 左
                     this.ctx.beginPath();
-                    this.ctx.arc(x + eyeSize * 1.5, y + this.tileHeight * 0.35, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX - eyeOffset, centerY - eyeOffset * 0.5, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                     this.ctx.beginPath();
-                    this.ctx.arc(x + eyeSize * 1.5, y + this.tileHeight * 0.65, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX - eyeOffset, centerY + eyeOffset * 0.5, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                 } else if (this.direction.y === -1) {
                     // 上
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth * 0.35, y + eyeSize * 1.5, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX - eyeOffset * 0.5, centerY - eyeOffset, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth * 0.65, y + eyeSize * 1.5, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX + eyeOffset * 0.5, centerY - eyeOffset, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                 } else if (this.direction.y === 1) {
                     // 下
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth * 0.35, y + this.tileHeight - eyeSize * 1.5, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX - eyeOffset * 0.5, centerY + eyeOffset, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                     this.ctx.beginPath();
-                    this.ctx.arc(x + this.tileWidth * 0.65, y + this.tileHeight - eyeSize * 1.5, eyeSize, 0, Math.PI * 2);
+                    this.ctx.arc(centerX + eyeOffset * 0.5, centerY + eyeOffset, eyeSize, 0, Math.PI * 2);
                     this.ctx.fill();
                 }
             } else {
-                // 蛇身 - 深绿色
-                this.ctx.shadowColor = 'rgba(0, 200, 0, 0.5)';
-                this.ctx.shadowBlur = 10;
+                // 蛇身 - 圆形，深绿色渐变
+                this.ctx.shadowColor = 'rgba(0, 200, 0, 0.6)';
+                this.ctx.shadowBlur = 12;
                 
-                const gradient = this.ctx.createLinearGradient(x, y, x + this.tileWidth, y + this.tileHeight);
-                gradient.addColorStop(0, '#00cc00');
-                gradient.addColorStop(1, '#008800');
+                // 根据位置使用渐变色
+                const gradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, this.tileWidth * 0.45);
+                gradient.addColorStop(0, '#22ff22');
+                gradient.addColorStop(0.7, '#00cc00');
+                gradient.addColorStop(1, '#006600');
                 
                 this.ctx.fillStyle = gradient;
                 this.ctx.beginPath();
-                this.ctx.roundRect(
-                    x + padding, y + padding,
-                    this.tileWidth - padding * 2, this.tileHeight - padding * 2,
-                    3
-                );
+                this.ctx.arc(centerX, centerY, this.tileWidth * 0.45, 0, Math.PI * 2);
                 this.ctx.fill();
+                
+                // 蛇身连接线 - 平滑过度
+                if (index > 0) {
+                    const prevSegment = this.snake[index - 1];
+                    const prevX = prevSegment.x * this.tileWidth + this.tileWidth / 2;
+                    const prevY = prevSegment.y * this.tileHeight + this.tileHeight / 2;
+                    
+                    this.ctx.strokeStyle = '#00cc00';
+                    this.ctx.lineWidth = this.tileWidth * 0.9;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(prevX, prevY);
+                    this.ctx.lineTo(centerX, centerY);
+                    this.ctx.stroke();
+                }
             }
         });
         
